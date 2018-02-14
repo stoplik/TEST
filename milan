@@ -1,0 +1,15 @@
+import subprocess
+
+#subprocess.call('net user zuzana.molnarova /domain ', shell=True)
+
+file='test.txt'
+fh=open(file)
+
+for user in fh:
+    user = user.rstrip()
+    user=user.split()
+    print(user)
+
+for k in user:
+    x = subprocess.call('net user ' + k + ' /domain ', shell=True)
+    print(x)
