@@ -5,6 +5,7 @@ import subprocess
 file='test.txt'
 fh=open(file)
 file_zapis='vystup.txt'
+fh1=open(file_zapis,'r', encoding='ascii', errors='surrogateescape')
 
 for user in fh:
     user = user.rstrip() #zmaze white characters
@@ -14,3 +15,9 @@ for user in fh:
         x = subprocess.call('net user ' + k + ' /domain >>'+file_zapis, shell=True)
         #print(x)
    
+for line in fh1:
+    line = line.rstrip()
+    print(line)
+#    if line.startswith('User name'):
+#        words=line.split()
+#        print(words)
