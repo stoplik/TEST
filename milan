@@ -17,7 +17,7 @@ for user in fh:
    
 for line in fh1:
     line = line.rstrip()
-    print(line)
-#    if line.startswith('User name'):
-#        words=line.split()
-#        print(words)
+    #print(line)
+    if line.startswith('User name') or line.startswith('Global Group membership') or line.startswith('  '):
+        words=line.split()
+        print(words)
