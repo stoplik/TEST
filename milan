@@ -14,15 +14,31 @@ for user in fh:
     for k in user:
         x = subprocess.call('net user ' + k + ' /domain >>'+file_zapis, shell=True)
         #print(x)
-   
+
+fout=open('output.txt','w')   
 for line in fh1:
     line = line.rstrip()
     #print(line)
     if line.startswith('User name') or line.startswith('Global Group membership') or line.startswith('  '):
         words=line.split()
         if line.startswith('User name'):
-            print(words[2])
-        if line.startswith('Global Group membership'):
-            print(words[3:])
+            name_temp=words[2]
+            print(words[2]+' name')
+            #fout.write('\n'+words[2]+'\n')
+        if line.startswith('Global Group memberships'):
+            #words=words[3:]
+            #print(words)
+            str1 = ''.join(words[3:])
+            str1=str1.split('*')
+            str1 = '\n'.join(str1)
+            print(str1)
+            #fout.write(str1+'\n')
+            #fout.write(name_temp+';'+str1+'\n')
         if line.startswith('    '):
-            print(words[0:])
+            str1 = '\n'.join(words[0:])
+            #str1=str1.split('*')
+            str1=str1.split('*')
+            str1 = '\n'.join(str1)
+            print(str1)
+            #fout.write(str1+'\n')
+            #fout.write(name_temp+';'+str1+'\n')
