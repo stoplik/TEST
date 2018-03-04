@@ -14,8 +14,8 @@ for user in fh:
     for k in user:
         x = subprocess.call('net user ' + k + ' /domain >>'+file_zapis, shell=True)
         #print(x)
+output=open('output.txt','w')
 
-fout=open('output.txt','w')   
 for line in fh1:
     line = line.rstrip()
     #print(line)
@@ -23,22 +23,31 @@ for line in fh1:
         words=line.split()
         if line.startswith('User name'):
             name_temp=words[2]
-            print(words[2]+' name')
+            #print(words[2]+' name')
             #fout.write('\n'+words[2]+'\n')
         if line.startswith('Global Group memberships'):
             #words=words[3:]
             #print(words)
             str1 = ''.join(words[3:])
-            str1=str1.split('*')
-            str1 = '\n'.join(str1)
-            print(str1)
-            #fout.write(str1+'\n')
+            lst=str1.split('*')
+            #print(str1)
+            for i in lst:
+                if len(i)>0:
+                    group=i+';'+name_temp
+                    print(group)
+            #str1 = '\n'.join(str1)
+            #str1 = str1+';'+name_temp
+            #print(str1)
+                    output.write(group+'\n')
             #fout.write(name_temp+';'+str1+'\n')
         if line.startswith('    '):
-            str1 = '\n'.join(words[0:])
-            #str1=str1.split('*')
-            str1=str1.split('*')
-            str1 = '\n'.join(str1)
-            print(str1)
-            #fout.write(str1+'\n')
-            #fout.write(name_temp+';'+str1+'\n')
+            str1 = ''.join(words[0:])
+            lst=str1.split('*')
+            for i in lst:
+                if len(i)>0:
+                    group=i+';'+name_temp
+                    print(group)
+            #str2 = '\n'.join(str1)
+            #str2 = str2+';'+name_temp
+            #print(str2)
+                    output.write(group+'\n')
