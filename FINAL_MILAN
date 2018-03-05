@@ -1,0 +1,54 @@
+import subprocess
+
+domain_users='domain_users.txt' #vsetci domain users
+user_groups='user_groups.txt' #vsetci domain users s udajmi z AD (groups atd)
+final_output='final_ouptut.txt' #rozparsovani users len s udajmi o groups, v ktorych su priradeni
+
+subprocess.call('net user /domain >' + domain_users, shell=True)
+
+with open(domain_users) as d_u:
+    lines_after_6 = d_u.readlines()[6:-4]#zacne citat po 6 riadku zo subora domain_users.txt
+for users in lines_after_6:
+    users = users.rstrip() #zmaze white characters
+    users=users.split() #rozdeli string(riadok) na list(pole)
+    #print(users)
+    for user in users:
+        subprocess.call('net user ' + user + ' /domain >'+user_groups, shell=True)
+        #subprocess.call('net user ' + user + ' /domain', shell=True)
+
+domain_users.close()
+
+user_groups_file=open(user_groups,'r', encoding='ascii', errors='surrogateescape') #riesi problem s encodingom
+final_output_file=open(final_output,'w')
+final_output_file.write('group;name'+'\n')
+
+for line in user_groups_file:
+    line = line.rstrip()
+    #print(line)
+    if line.startswith('User name') or line.startswith('Global Group membership') or line.startswith('  '):
+        words=line.split() #mam list (pole) slov z filu user_groups.txt
+        if line.startswith('User name'):
+            name_temp=words[2] #najde mi 3 zo zoznamu co je meno usera (0,1,2 - cislovanie) z riadku, ktory zacina s User name
+
+        if line.startswith('Global Group memberships'):
+            group_str = ''.join(words[3:]) # najskor rozparsuje a najde mi od 4-teho slova do konca zoznamu,ktory zacina Global Group Memberships. Nasledne si zmenim list na string pomocou . ''.join a tu mam uz len skupiny oddelene * napr.*DomainUser*IT atd.
+            group_lst=group_str.split('*') # rozdelim si string groups pomocou znaku * a vytvorim si zoznam
+            #print(str1)
+            for group_item in group_lst:
+                if len(group_item)>0: #loop mi prejde celym zoznamom, t.j. listom a ak tam nie je space t.j. medzera tak priradi kazdej skupine aj usera
+                    group=group_item+';'+name_temp
+                    print(group)
+                    final_output_file.write(group+'\n')
+
+        if line.startswith('    '):
+            group_str = ''.join(words[0:])# rovnako ako v pripade vyssie hlada skupiny. toto sa tyka userov, ktori patria do viacerych skupin a teda skupina pokracuje do dalsieho riadku, ktory zacina tabulatorom
+            group_lst=group_str.split('*')
+            for group_item in group_lst:
+                if len(group_item)>0:
+                    group=group_item+';'+name_temp
+#                    print(group)
+                    final_output_file.write(group+'\n')
+
+
+user_groups_file.close()
+final_output_file.close()
