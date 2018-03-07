@@ -13,7 +13,7 @@ for users in lines_after_6:
     users=users.split() #rozdeli string(riadok) na list(pole)
     #print(users)
     for user in users:
-        subprocess.call('net user ' + user + ' /domain >'+user_groups, shell=True)
+        subprocess.call('net user ' + user + ' /domain >>'+user_groups, shell=True)
         #subprocess.call('net user ' + user + ' /domain', shell=True)
 
 domain_users.close()
