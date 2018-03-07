@@ -14,7 +14,7 @@ for users in lines_after_6:
     #print(users)
     for user in users:
         subprocess.call('net user ' + user + ' /domain >>'+user_groups, shell=True)
-        #subprocess.call('net user ' + user + ' /domain', shell=True)
+        #subprocess.call('net user ' + user + ' /domain', shell=True) test
 
 domain_users.close()
 
